@@ -44,17 +44,17 @@ function reloadGlossaryData(manifest) {
 		});
 
 		function markupWordOccurrence(container, word, data) {
-			var start = data.pos;
-			var end = data.pos + word.length;
+			var start = data.word_offset;
+			var end = data.word_offset + word.length;
 
 			var pre = $('<span>');
-			pre.text(data.line.substring(0, start));
+			pre.text(data.line_text.substring(0, start));
 
 			var ul = $('<span style="text-decoration: underline;">');
-			ul.text(data.line.substring(start, end));
+			ul.text(data.line_text.substring(start, end));
 
 			var post = $('<span>');
-			post.text(data.line.substring(end));
+			post.text(data.line_text.substring(end));
 
 			container.append(pre);
 			container.append(ul);
@@ -89,13 +89,17 @@ function reloadGlossaryData(manifest) {
 			var dict = annotationData.words;
 			word = word.replace(/\W/g, ''); // strip punctuation
 			word = word.toLowerCase(); // normalize case (might want to do this as an optional thing)
+			if (!word) {
+				// don't include any empty words
+				return;
+			}
 			if (!dict[word]) {
 				dict[word] = [];
 			}
 			dict[word].push({
-				index: lookupIndex,
-				line: line,
-				pos: pos,
+				line_index: lookupIndex,
+				line_text: line,
+				word_offset: pos,
 			});
 
 			pos += offset;
