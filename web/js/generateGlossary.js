@@ -60,6 +60,31 @@ function reloadGlossaryData(manifest) {
 			container.append(ul);
 			container.append(post);
 		}
+
+		var jsonVersion = JSON.stringify(dict, null, '  ')
+		var csvVersion = generateCSV(dict);
+		$('a#download-json').attr('href', 'data:application/json;charset=utf-8,' + encodeURIComponent(jsonVersion))
+		$('a#download-csv').attr('href', 'data:text/csv;charset=utf-8,' + encodeURIComponent(csvVersion))
+		$('#debug').text(csvVersion);
+	}
+
+	function generateCSV(words) {
+		var header = 'row_num,word,line_text,word_offset';
+		var csv_lines = [header];
+		var count = 0;
+		for (var word in words) {
+			words[word].forEach(data => {
+				count += 1;
+				csv_lines.push([
+					count,
+					word,
+					data.line_text,
+					data.word_offset,
+				].map(x => `"${x}"`))
+			});
+		}
+
+		return csv_lines.join("\n");
 	}
 
 

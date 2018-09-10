@@ -52,7 +52,32 @@
         
     </style>
     <body>
-    	<ul id="glossary">
+	<a id="download-json" download="glossary.json">Download JSON file</a>
+	<a id="download-csv" download="glossary.csv">Download CSV file</a>
+    	<ul id="glossaryDiv">
 	</ul>
     </body>
+	<script>
+$(function() {
+	// WHY isn't this built-in. Anyway, strip off the '?', then get the right parameter
+	var projectId = location.search.substring(1).split("&").map(comp => comp.split("=")).filter(comp => comp[0] == 'projectID')[0][1];
+	$.get('/getProjectTPENServlet?projectID=' + projectId, function(payload) {
+		reloadGlossaryData(JSON.parse(payload.manifest));
+	}).fail(function(response) {
+		if (response.status == 401) {
+			redirectToLogin("You must be logged in to view data. ")
+		} else {
+			alert("An error has occurred. Try reloading the page, and if the problem persists, contact the tech team.");
+		}
+	});
+
+
+	function redirectToLogin(text) {
+		if (confirm(text + " Do you wish to view the login page?")) {
+			location.href = "login.html";
+		}
+	}
+
+});
+	</script>
 </html>
