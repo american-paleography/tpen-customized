@@ -69,7 +69,7 @@ function reloadGlossaryData(manifest) {
 	}
 
 	function generateCSV(words) {
-		var header = 'row_num,word,line_text,word_offset';
+		var header = 'row_num,word,line_text,word_offset,line_index_in_page,page_index';
 		var csv_lines = [header];
 		var count = 0;
 		for (var word in words) {
@@ -80,6 +80,8 @@ function reloadGlossaryData(manifest) {
 					word,
 					data.line_text,
 					data.word_offset,
+					data.line_index_in_page,
+					data.page_index,
 				].map(x => `"${x}"`))
 			});
 		}
@@ -89,8 +91,10 @@ function reloadGlossaryData(manifest) {
 
 
 	function extractLines(sequence) {
+		var page_id = 0;
 		sequence.canvases.forEach(canvas => {
 			var pageText = [];
+			var currentLineIndex = annotationData.lines.length;
 			canvas.otherContent.forEach(other => {
 				other.resources.forEach(wrapper => {
 					var resource = wrapper.resource;
@@ -98,15 +102,16 @@ function reloadGlossaryData(manifest) {
 						var line = resource['cnt:chars'] || '';
 						annotationData.lines.push(line);
 						pageText.push(line);
-						addWords(line, annotationData.lines.length-1);
+						addWords(line, annotationData.lines.length-1, page_id, currentLineIndex);
 					}
 				});
 			})
 			annotationData.pages.push(pageText.join("\n"));
+			page_id += 1;
 		})
 	}
 
-	function addWords(line, lookupIndex) {
+	function addWords(line, lookupIndex, pageIndex, pageStartLine) {
 		var words = line.split(/\s+/);
 		var pos = 0;
 		words.forEach(word => {
@@ -125,6 +130,8 @@ function reloadGlossaryData(manifest) {
 				line_index: lookupIndex,
 				line_text: line,
 				word_offset: pos,
+				page_index: pageIndex,
+				line_index_in_page: lookupIndex - pageStartLine,
 			});
 
 			pos += offset;
