@@ -10,6 +10,7 @@
         <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
         <script src="https://use.fontawesome.com/4ae676603d.js"></script>
 
+        <link href="/css/generateGlossary.css" rel="stylesheet">
 	<script src="/js/generateGlossary.js"></script>
     </head>    
     <style>
@@ -52,10 +53,24 @@
         
     </style>
     <body>
-	<a id="download-json" download="glossary.json">Download JSON file</a>
-	<a id="download-csv" download="glossary.csv">Download CSV file</a>
-    	<ul id="glossaryDiv">
-	</ul>
+	<p>
+		<a id="download-json" download="glossary.json">Download JSON file</a>
+		<a id="download-csv" download="glossary.csv">Download CSV file</a>
+	</p>
+	<p>
+		<input name="base_word" type="text" placeholder="base word" />
+		<input name="alt_word" type="text" placeholder="alternate form" />
+		<button id="add_variant">Add Variant Form</button>
+		<ul id="variants_listing"></ul>
+	</p>
+	<p>
+		<h2>Abbreviations & Variants</h2>
+		<ul id="glossaryVariantForms"></ul>
+	</p>
+	<p>
+		<h2>Raw List</h2>
+		<ul id="glossaryDiv"></ul>
+	</p>
     </body>
 	<script>
 $(function() {

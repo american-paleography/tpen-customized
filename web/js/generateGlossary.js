@@ -1,26 +1,74 @@
+window.onerror = alert;
 function reloadGlossaryData(manifest) {
 	// data used by various parts of this closure
-	annotationData = {
+	var annotationData = {
 		lines: [],
 		pages: [],
 		words: {},
 	};
+	var settings = {
+		variants: {},
+	};
+	var scratch = {
+		varLists: {},
+	}
 
 
 	// kick off the actual work
 	manifest.sequences.forEach(extractLines);
+	setVariantForms();
 	showGlossary();
 
 
+	$('#add_variant').on('click', function() {
+		var base = $('[name=base_word]').val();
+		var alt = $('[name=alt_word]').val();
+
+		if (!settings.variants[base]) {
+			settings.variants[base] = [];
+			var li =  $('<li>');
+			var span = $('<span>');
+			span.text(base);
+			var ul = $('<ul>');
+			li.append(span);
+			li.append(ul);
+			scratch.varLists[base] = ul;
+			$('#variants_listing').append(li);
+		}
+		settings.variants[base].push(alt);
+
+		var item = $('<li>');
+		item.text(alt);
+		scratch.varLists[base].append(item);
+
+		showGlossary();
+	});
+
+
 	// various workhorse functions below 
+	
+	function setVariantForms() {
+		$('.variant_form[data-variant-of]').each(function(i, el) {
+			var mainForm = el.data('variantOf');
+			var altForm = el.data('variant');
+			
+			var varData = settings.variants;
+			if (!varData[mainForm]) {
+				varData[mainForm] = [];
+			}
+			varData[mainForm].push(altForm);
+		})
+	}
 
 	function showGlossary() {
 		var splitHeight = window.innerHeight + "px";
 		$('.wordOccurrencesList').css('height', splitHeight);
 		var dict = annotationData.words;
 		var mainList = $('#glossaryDiv');
+		mainList.empty();
 		Object.keys(dict).sort().filter(x => x).forEach(word => {
 			var data = dict[word];
+			
 			var item = $('<li>');
 			var keyword = $('<strong>');
 			keyword.text(word);
@@ -30,12 +78,12 @@ function reloadGlossaryData(manifest) {
 				var separator = $('<span>');
 				separator.text(": ");
 				item.append(separator);
-				markupWordOccurrence(item, word, data[0]);
+				markupWordOccurrence(item, data[0]);
 			} else {
 				var sublist = $('<ul>');
 				data.forEach(line => {
 					var subitem = $('<li>');
-					markupWordOccurrence(subitem, word, line);
+					markupWordOccurrence(subitem, line);
 					sublist.append(subitem);
 				})
 				item.append(sublist);
@@ -43,9 +91,40 @@ function reloadGlossaryData(manifest) {
 			mainList.append(item);
 		});
 
-		function markupWordOccurrence(container, word, data) {
+		var variantList = $('#glossaryVariantForms');
+		window.onerror = alert;
+		var variants = settings.variants;
+		variantList.empty();
+		Object.keys(variants).sort().forEach(baseWord => {
+			var forms = variants[baseWord];
+			var data = [].concat(dict[baseWord] || [], ...forms.map(form => dict[form] || []));
+
+			var item = $('<li>');
+			var keyword = $('<strong>');
+			keyword.text(baseWord);
+			item.append(keyword);
+
+			if (data.length == 1) {
+				var separator = $('<span>');
+				separator.text(": ");
+				item.append(separator);
+				markupWordOccurrence(item, data[0]);
+			} else {
+				var sublist = $('<ul>');
+				data.forEach(line => {
+					var subitem = $('<li>');
+					markupWordOccurrence(subitem, line);
+					sublist.append(subitem);
+				})
+				item.append(sublist);
+			}
+			variantList.append(item);
+		});
+		
+
+		function markupWordOccurrence(container, data) {
 			var start = data.word_offset;
-			var end = data.word_offset + word.length;
+			var end = data.word_offset + data.word_length;
 
 			var pre = $('<span>');
 			pre.text(data.line_text.substring(0, start));
@@ -56,9 +135,13 @@ function reloadGlossaryData(manifest) {
 			var post = $('<span>');
 			post.text(data.line_text.substring(end));
 
+			var whereFrom = $('<span class="source-line-indicator">');
+			whereFrom.text(` [line ${data.line_index_in_page} / page ${data.page_index}]`);
+
 			container.append(pre);
 			container.append(ul);
 			container.append(post);
+			container.append(whereFrom);
 		}
 
 		var jsonVersion = JSON.stringify(dict, null, '  ')
@@ -114,25 +197,26 @@ function reloadGlossaryData(manifest) {
 	function addWords(line, lookupIndex, pageIndex, pageStartLine) {
 		var words = line.split(/\s+/);
 		var pos = 0;
-		words.forEach(word => {
-			var offset = word.length + 1;
-			var dict = annotationData.words;
-			word = word.replace(/\W/g, ''); // strip punctuation
+		var dict = annotationData.words;
+		words.forEach(rawWord => {
+			var offset = rawWord.length + 1;
+			var word = rawWord.replace(/\W/g, ''); // strip punctuation
 			word = word.toLowerCase(); // normalize case (might want to do this as an optional thing)
-			if (!word) {
-				// don't include any empty words
-				return;
+
+			// only add it in if it's non-empty (but we still need to increment if it IS empty)
+			if (word) {
+				if (!dict[word]) {
+					dict[word] = [];
+				}
+				dict[word].push({
+					line_index: lookupIndex,
+					line_text: line,
+					word_offset: pos,
+					word_length: rawWord.length,
+					page_index: pageIndex,
+					line_index_in_page: lookupIndex - pageStartLine,
+				});
 			}
-			if (!dict[word]) {
-				dict[word] = [];
-			}
-			dict[word].push({
-				line_index: lookupIndex,
-				line_text: line,
-				word_offset: pos,
-				page_index: pageIndex,
-				line_index_in_page: lookupIndex - pageStartLine,
-			});
 
 			pos += offset;
 		});
