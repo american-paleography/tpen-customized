@@ -195,25 +195,6 @@
                     <div class="flex-container flex-stretch buttons let">
                         <select id="splitScreenTools" > 
                              <option id="activeSplitTool" disabled>Tools and Info</option> 
-                            <optgroup label="French Paleography Resources">
-                                <option splitter='partialTrans' class="splitTool" >Partial Transcriptions</option>
-                                <option splitter='essay' class="splitTool" >Background Essay</option>
-                                <option splitter='scripts' class="splitTool" >French Scripts and Hands</option>
-                                <option splitter='frenchdocs' class="splitTool" >About French Documents</option>
-                                <option splitter='fInstitutions' class="splitTool" >French Institutions</option>
-                                <option splitter='maps' class="splitTool" >Historical Maps</option>
-                             </optgroup>
-                             <optgroup label="Paleography Information">
-                                <option splitter='start' class="splitTool" >Get Started</option>
-                                <option splitter='dictionary' class="splitTool" >Dictionaries</option>
-                                <option splitter='glossary' class="splitTool" >Glossary</option>
-                                <option splitter='abbrev' class="splitTool" >Abbreviations</option>
-                                <option splitter='calligraphy' class="splitTool" >Calligraphy Books</option>
-                                <option splitter='conservation' class="splitTool" >Manuscript Preservation</option>
-                                <option splitter='teachers' class="splitTool" >Teaching</option>
-                                <option splitter='group' class="splitTool" >Group Work</option>
-                                <option splitter='conventions' class="splitTool" >Transcribing & Editing Conventions</option>
-                             </optgroup>
                              <optgroup label="Other Tools">
                                 <option splitter='wordOccurrences' class="splitTool" >Word Occurrences</option>
                                 <option splitter='preview' class="splitTool" >Text Preview</option>
@@ -448,81 +429,6 @@
                 </div>
             </div>
             
-            <div id="startSplit" class="split">
-                <div style="text-align: center;" class="fullScreenTrans"><i class="fa fa-share fa-flip-vertical"></i></div>
-                <iframe class="loadingIframe" data_src="https://paleography.library.utoronto.ca/content/get-started?response_type=embed"></iframe>
-            </div>
-            
-            <div id="frenchdocsSplit" class="split">
-                <div style="text-align: center;" class="fullScreenTrans"><i class="fa fa-share fa-flip-vertical"></i></div>
-                <iframe class="loadingIframe" data_src="https://paleography.library.utoronto.ca/content/about-french-documents?response_type=embed"></iframe>
-            </div>
-        
-            <div id="calligraphySplit" class="split">
-                <div style="text-align: center;" class="fullScreenTrans"><i class="fa fa-share fa-flip-vertical"></i></div>
-                <iframe class="loadingIframe" data_src="https://paleography.library.utoronto.ca/islandora/object/paleography%3Acalligraphybooks?response_type=embed"></iframe>
-            </div>
-        
-            <div id="mapsSplit" class="split">
-                <div style="text-align: center;" class="fullScreenTrans"><i class="fa fa-share fa-flip-vertical"></i></div>
-                <iframe class="loadingIframe" data_src="https://paleography.library.utoronto.ca/islandora/object/paleography%3Ahistoricalmaps?response_type=embed"></iframe>
-            </div>
-        
-            <div id="scriptsSplit" class="split">
-                <div style="text-align: center;" class="fullScreenTrans"><i class="fa fa-share fa-flip-vertical"></i></div>
-                <iframe class="loadingIframe" data_src="https://paleography.library.utoronto.ca/content/scripts?response_type=embed"></iframe>
-            </div>
-        
-            <div id="documentsSplit" class="split">
-                <div style="text-align: center;" class="fullScreenTrans"><i class="fa fa-share fa-flip-vertical"></i></div>
-                <iframe class="loadingIframe" data_src="https://paleography.library.utoronto.ca/content/about-french-documents?response_type=embed"></iframe>
-            </div>
-        
-            <div id="conservationSplit" class="split">
-                <div style="text-align: center;" class="fullScreenTrans"><i class="fa fa-share fa-flip-vertical"></i></div>          
-                <iframe class="loadingIframe" data_src="https://paleography.library.utoronto.ca/content/conservation?response_type=embed"></iframe>
-            </div>
-        
-            <div id="conventionsSplit" class="split">
-                <div style="text-align: center;" class="fullScreenTrans"><i class="fa fa-share fa-flip-vertical"></i></div>
-                <iframe class="loadingIframe" data_src="https://paleography.library.utoronto.ca/content/transcribing-editing-conventions?response_type=embed"></iframe>
-            </div>
-        
-            <div id="teachersSplit" class="split">
-                <div style="text-align: center;" class="fullScreenTrans"><i class="fa fa-share fa-flip-vertical"></i></div>
-                <iframe class="loadingIframe" data_src="https://paleography.library.utoronto.ca/content/teachers?response_type=embed"></iframe>
-            </div>
-        
-            <div id="groupSplit" class="split">
-                <div style="text-align: center;" class="fullScreenTrans"><i class="fa fa-share fa-flip-vertical"></i></div>
-                <iframe class="loadingIframe" data_src="https://paleography.library.utoronto.ca/content/group-work?response_type=embed" </iframe>
-            </div>
-        
-            <div id="abbrevSplit" class="split" >
-                <div style="text-align: center;" class="fullScreenTrans"><i class="fa fa-share fa-flip-vertical"></i></div>
-                <iframe class="loadingIframe" data_src="https://paleography.library.utoronto.ca/content/abbreviations?response_type=embed"></iframe>
-            </div>
-        
-            <div id="dictionarySplit" class="split iTool">
-                <div style="text-align: center;" class="fullScreenTrans"><i class="fa fa-share fa-flip-vertical"></i></div>
-                <iframe class="loadingIframe" id="frenchDictionary" data_src="https://paleography.library.utoronto.ca/content/dictionaries?response_type=embed">
-                </iframe>
-            </div>
-        
-            <div id="glossarySplit" class="split">
-                <div style="text-align: center;" class="fullScreenTrans"><i class="fa fa-share fa-flip-vertical"></i></div>
-                <iframe class="loadingIframe" data_src="https://paleography.library.utoronto.ca/content/glossary-of-terms?response_type=embed"></iframe>
-            </div>
-        
-            <div id="fInstitutionsSplit" class="split">
-                <div style="text-align: center;" class="fullScreenTrans"><i class="fa fa-share fa-flip-vertical"></i></div>
-                <iframe class="loadingIframe" data_src="https://paleography.library.utoronto.ca/content/french-institutions?response_type=embed"></iframe>
-            </div>
-        
-            <div id="otherSplit" class="split">
-                <div style="text-align: center;" class="fullScreenTrans"><i class="fa fa-share fa-flip-vertical"></i></div>
-                <iframe class="loadingIframe" data_src="https://paleography.library.utoronto.ca/content/other-reference-resources?response_type=embed"></iframe>
-            </div>
         
            <div id="linebreakSplit" class="ui-widget ui-widget-content split">
                <div style="text-align: center;" class="fullScreenTrans"><i class="fa fa-share fa-flip-vertical"></i></div>
@@ -570,16 +476,6 @@
                 </div>
                 <div id="fullPageSplitCanvas"><img id="fullPageImg" src="" /></div>
                             </div>
-            <div id="essaySplit" class="split iTool">
-                <div style="text-align: center;" class="fullScreenTrans"><i class="fa fa-share fa-flip-vertical"></i></div>
-                <iframe class="loadingIframe" id="contextualEssay" data_src="https://paleography.library.utoronto.ca/content/background-essays?response_type=embed">
-                </iframe>
-            </div>
-            <div id="partialTransSplit" class="split iTool">
-                <div style="text-align: center;" class="fullScreenTrans"><i class="fa fa-share fa-flip-vertical"></i></div>
-                <iframe class="loadingIframe" id="partialTrans" data_src="https://paleography.library.utoronto.ca/content/partial_transcriptions?response_type=embed">
-                </iframe>
-            </div>
             <div id="helpSplit" class="split">
                 <div style="text-align: center;" class="fullScreenTrans"><i class="fa fa-share fa-flip-vertical"></i></div>
                 <div id="helpHeaders">
