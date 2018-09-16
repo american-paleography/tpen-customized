@@ -1,4 +1,3 @@
-window.onerror = alert;
 var settings = {
 	variants: {},
 };
