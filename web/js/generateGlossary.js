@@ -1,13 +1,41 @@
 window.onerror = alert;
+var settings = {
+	variants: {},
+};
+
+function saveSettings() {
+	localStorage.setItem('extractionSettings', JSON.stringify(settings));
+}
+function loadSettings() {
+	var tmp = localStorage.getItem('extractionSettings');
+	if (!tmp) {
+		return;
+	}
+	tmp = JSON.parse(tmp);
+
+	for (var key in tmp) {
+		settings[key] = tmp[key];
+	}
+}
+
+$(function() {
+	loadSettings();
+});
+
+$(function() {
+	$('#clear_variants').on('click', function() {
+		settings.variants = {};
+		saveSettings();
+		location.reload();
+	});
+});
+
 function reloadGlossaryData(manifest) {
 	// data used by various parts of this closure
 	var annotationData = {
 		lines: [],
 		pages: [],
 		words: {},
-	};
-	var settings = {
-		variants: {},
 	};
 	var scratch = {
 		varLists: {},
@@ -16,6 +44,7 @@ function reloadGlossaryData(manifest) {
 
 	// kick off the actual work
 	manifest.sequences.forEach(extractLines);
+	displayVariantsInDom();
 	setVariantForms();
 	showGlossary();
 
@@ -26,6 +55,26 @@ function reloadGlossaryData(manifest) {
 
 		if (!settings.variants[base]) {
 			settings.variants[base] = [];
+		}
+		settings.variants[base].push(alt);
+
+		showSingleVariantInDom(base, alt);
+
+		saveSettings();
+
+		showGlossary();
+	});
+
+	function displayVariantsInDom() {
+		Object.keys(settings.variants).sort().forEach(key => {
+			settings.variants[key].forEach(variant => {
+				showSingleVariantInDom(key, variant);
+			});
+		})
+	}
+
+	function showSingleVariantInDom(base, alt) {
+		if (!scratch.varLists[base]) {
 			var li =  $('<li>');
 			var span = $('<span>');
 			span.text(base);
@@ -35,14 +84,11 @@ function reloadGlossaryData(manifest) {
 			scratch.varLists[base] = ul;
 			$('#variants_listing').append(li);
 		}
-		settings.variants[base].push(alt);
 
 		var item = $('<li>');
 		item.text(alt);
 		scratch.varLists[base].append(item);
-
-		showGlossary();
-	});
+	}
 
 
 	// various workhorse functions below 
