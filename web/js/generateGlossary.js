@@ -29,7 +29,7 @@ $(function() {
 	});
 });
 
-function reloadGlossaryData(manifest) {
+function reloadGlossaryData(manifest, other_data) {
 	// data used by various parts of this closure
 	var annotationData = {
 		lines: [],
@@ -107,7 +107,6 @@ function reloadGlossaryData(manifest) {
 
 	function showGlossary() {
 		var splitHeight = window.innerHeight + "px";
-		$('.wordOccurrencesList').css('height', splitHeight);
 		var dict = annotationData.words;
 		var mainList = $('#glossaryDiv');
 		mainList.empty();
@@ -180,8 +179,10 @@ function reloadGlossaryData(manifest) {
 			var post = $('<span>');
 			post.text(data.line_text.substring(end));
 
-			var whereFrom = $('<span class="source-line-indicator">');
+			var whereFrom = $('<a class="source-line-indicator" href="#">');
 			whereFrom.text(` [line ${data.line_index_in_file} / file ${data.file_index}]`);
+			whereFrom.data('folio_index', data.folio_index);
+			whereFrom.data('aabb', data.aabb);
 
 			container.append(pre);
 			container.append(ul);
@@ -193,6 +194,24 @@ function reloadGlossaryData(manifest) {
 		var csvVersion = generateCSV(dict);
 		$('a#download-json').attr('href', 'data:application/json;charset=utf-8,' + encodeURIComponent(jsonVersion))
 		$('a#download-csv').attr('href', 'data:text/csv;charset=utf-8,' + encodeURIComponent(csvVersion))
+
+		$('.source-line-indicator').on('click', function() {
+			var path = "/imageResize?folioNum=" + $(this).data('folio_index') + "&height=2000";
+			var holder = $(this);
+			var aabb = holder.data('aabb');
+			var [x, y, w, h] = aabb.split(',').map(x => parseInt(x));
+			var scale = 2; // is this correct for all images...?
+			var img = new Image();
+			img.onload = function() {
+				var canvas = $('<canvas>');
+				canvas.attr('width', w);
+				canvas.attr('height', h);
+				var ctx = canvas[0].getContext('2d');
+				ctx.drawImage(img, x * scale, y * scale, w * scale, h * scale, 0, 0, w, h);
+				holder.append(canvas);
+			};
+			img.src = path;
+		});
 		$('#debug').text(csvVersion);
 	}
 
@@ -221,6 +240,7 @@ function reloadGlossaryData(manifest) {
 	function extractLines(sequence) {
 		var file_id = 0;
 		sequence.canvases.forEach(canvas => {
+			var folio = other_data ? JSON.parse(other_data.ls_fs)[file_id].folioNumber : null;
 			var fileText = [];
 			var currentLineIndex = annotationData.lines.length;
 			canvas.otherContent.forEach(other => {
@@ -230,7 +250,8 @@ function reloadGlossaryData(manifest) {
 						var line = resource['cnt:chars'] || '';
 						annotationData.lines.push(line);
 						fileText.push(line);
-						addWords(line, annotationData.lines.length-1, file_id, currentLineIndex);
+						var aabb = wrapper.on.match(/#xywh=(.*)/)[1];
+						addWords(line, annotationData.lines.length-1, file_id, currentLineIndex, folio, aabb);
 					}
 				});
 			})
@@ -239,7 +260,7 @@ function reloadGlossaryData(manifest) {
 		})
 	}
 
-	function addWords(line, lookupIndex, fileIndex, fileStartLine) {
+	function addWords(line, lookupIndex, fileIndex, fileStartLine, folio, aabb) {
 		var words = line.split(/\s+/);
 		var pos = 0;
 		var dict = annotationData.words;
@@ -260,6 +281,8 @@ function reloadGlossaryData(manifest) {
 					word_length: rawWord.length,
 					file_index: fileIndex,
 					line_index_in_file: lookupIndex - fileStartLine,
+					folio_index: folio,
+					aabb: aabb,
 				});
 			}
 
