@@ -200,6 +200,9 @@ function reloadGlossaryData(manifest, other_data) {
 			var holder = $(this);
 			var aabb = holder.data('aabb');
 			var [x, y, w, h] = aabb.split(',').map(x => parseInt(x));
+			var vert_scale = parseFloat($('[name=line-height]').val() || 1)
+			y -= (vert_scale - 1)/2 * h;
+			h *= vert_scale
 			var scale = 2; // is this correct for all images...?
 			var img = new Image();
 			img.onload = function() {
