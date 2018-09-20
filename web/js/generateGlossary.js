@@ -179,7 +179,7 @@ function reloadGlossaryData(manifest, other_data) {
 			var post = $('<span>');
 			post.text(data.line_text.substring(end));
 
-			var whereFrom = $('<a class="source-line-indicator" href="#">');
+			var whereFrom = $('<span class="source-line-indicator">');
 			whereFrom.text(` [line ${data.line_index_in_file} / file ${data.file_index}]`);
 			whereFrom.data('folio_index', data.folio_index);
 			whereFrom.data('aabb', data.aabb);
