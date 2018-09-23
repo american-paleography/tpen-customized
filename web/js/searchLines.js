@@ -13,7 +13,7 @@ function searchLines(lines) {
 			lineIndices.push(parseInt(val));
 		}
 	});
-	var searchText = $('#search-text').val()
+	var searchTextList = Array.from($('.search-text').map(function() { return $(this).val(); })).filter(x => x);
 	
 	var overall_container = $('#search-output');
 
@@ -22,8 +22,11 @@ function searchLines(lines) {
 			return false;
 		}
 
-		if (searchText && !line.line_text.includes(searchText)) {
-			return false;
+		// cannot use a forEach() callback, since to return
+		for (var searchText of searchTextList) {
+			if (!line.line_text.includes(searchText)) {
+				return false;
+			}
 		}
 
 		return true;
@@ -61,3 +64,9 @@ function searchLines(lines) {
 		container.append(span);
 	}
 }
+
+$(function() {
+	$('#add-search-text').on('click', function() {
+		$(this).parent().append('<input type="text" class="search-text">');
+	});
+})
