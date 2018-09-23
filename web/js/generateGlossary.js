@@ -6,6 +6,7 @@ function saveSettings() {
 	localStorage.setItem('extractionSettings', JSON.stringify(settings));
 }
 function loadSettings() {
+	if (!localStorage) { return; }
 	var tmp = localStorage.getItem('extractionSettings');
 	if (!tmp) {
 		return;
@@ -35,6 +36,7 @@ function reloadGlossaryData(manifest, other_data) {
 		lines: [],
 		files: [],
 		words: {},
+		linesWithMetadata: [],
 	};
 	var scratch = {
 		varLists: {},
@@ -216,6 +218,8 @@ function reloadGlossaryData(manifest, other_data) {
 			img.src = path;
 		});
 		$('#debug').text(csvVersion);
+
+		$('#do-search').on('click', function() { searchLines(annotationData.linesWithMetadata)});
 	}
 
 	function generateCSV(words) {
@@ -264,6 +268,16 @@ function reloadGlossaryData(manifest, other_data) {
 	}
 
 	function addWords(line, lookupIndex, fileIndex, fileStartLine, folio, aabb) {
+		annotationData.linesWithMetadata.push({
+
+			line_index: lookupIndex,
+			line_text: line,
+			file_index: fileIndex,
+			line_index_in_file: lookupIndex - fileStartLine,
+			folio_index: folio,
+			aabb: aabb,
+		});
+
 		var words = line.split(/\s+/);
 		var pos = 0;
 		var dict = annotationData.words;
@@ -277,7 +291,7 @@ function reloadGlossaryData(manifest, other_data) {
 				if (!dict[word]) {
 					dict[word] = [];
 				}
-				dict[word].push({
+				var obj = {
 					line_index: lookupIndex,
 					line_text: line,
 					word_offset: pos,
@@ -286,7 +300,8 @@ function reloadGlossaryData(manifest, other_data) {
 					line_index_in_file: lookupIndex - fileStartLine,
 					folio_index: folio,
 					aabb: aabb,
-				});
+				};
+				dict[word].push(obj)
 			}
 
 			pos += offset;
