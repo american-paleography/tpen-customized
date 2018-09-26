@@ -1,8 +1,8 @@
 function prepExporter(project) {
 	var manifest = JSON.parse(project.manifest);
 
-	$('#prep-download').text('Apply settings');
-	$('#prep-download').attr('disabled', null);
+	$('#download-transcript').text('Download project transcription');
+	$('#download-transcript').attr('href', '#');
 
 	window.EXPORT_DATA = extractLines(manifest.sequences[0]);
 
@@ -45,7 +45,7 @@ $(function() {
 		return text;
 	}
 
-	$('#prep-download').on('click', function() {
+	$('#download-transcript').on('click', function() {
 		var separator = $('[name=page-separator]').val();
 		var filename = $('[name=download-filename]').val() + ".txt";
 		var text = EXPORT_DATA.map(file => formatText(file)).join("\n\n" + separator + "\n\n");
