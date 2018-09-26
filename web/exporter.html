@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+        <title>Newberry Transcription</title>
+        <link type="text/css" href="css/custom-theme/jQuery.css" rel="Stylesheet" />
+        <script type="text/javascript" src="js/newberry.js"></script>
+        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.js"></script>
+        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/jquery-ui.js"></script>
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+        <script src="https://use.fontawesome.com/4ae676603d.js"></script>
+
+	<script src="js/exporter.js"></script>
+    </head>    
+    <style>
+        p{
+            padding: 0px 10px;
+        }
+        .magnifyHelp{
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            margin: 0 auto;
+            background-color: rgb(255,252,227);
+            padding: 0;
+            color: #666;
+            text-align: center;
+            z-index: 3;
+            display: none;
+            box-shadow: 0 0 5px rgba(0,0,0,0.34);
+            opacity: .85;
+        }
+        .magnifyHelp p {
+            white-space: nowrap;
+            margin: 0;
+            padding: .25em;
+        }
+        
+        .magifyHelp button{
+            width: 35px;
+        }
+        
+        .parsingHdr{
+            margin-left: 20px;
+        }
+        optgroup{
+            background-color: grey;
+            color: #002a5c;
+        }
+        
+        
+        
+    </style>
+    <body>
+	<p>
+		<button id="prep-download" disabled="disabled">loading...</button><a id="download-transcript">Download project transcription</a>
+	</p>
+	<p>
+		<label>Include line numbers</label>
+		<input type="checkbox" name="line-num"></input>
+	</p>
+	<p>
+		<label>Single-file mode</label>
+		<input type="checkbox" name="single-file" disabled="disabled" checked="checked"></input>
+	</p>
+	<p>
+		<label>Page separator (for single-file mode)</label>
+		<input type="text" name="page-separator" value="=========="></input>
+	</p>
+	<p>
+		<label>Filename (without extension)</label>
+		<input type="text" name="download-filename" value="full_transcription"></input>
+	</p>
+    </body>
+	<script>
+$(function() {
+	// WHY isn't this built-in. Anyway, strip off the '?', then get the right parameter
+	var projectId = location.search.substring(1).split("&").map(comp => comp.split("=")).filter(comp => comp[0] == 'projectID')[0][1];
+	$.get('/getProjectTPENServlet?projectID=' + projectId, function(payload) {
+		prepExporter(payload);
+	}).fail(function(response) {
+		if (response.status == 401) {
+			redirectToLogin("You must be logged in to view data. ")
+		} else {
+			alert("An error has occurred. Try reloading the page, and if the problem persists, contact the tech team.");
+		}
+	});
+
+
+	function redirectToLogin(text) {
+		if (confirm(text + " Do you wish to view the login page?")) {
+			location.href = "login.html";
+		}
+	}
+
+});
+	</script>
+</html>
