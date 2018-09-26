@@ -48,7 +48,7 @@ $(function() {
 	$('#prep-download').on('click', function() {
 		var separator = $('[name=page-separator]').val();
 		var filename = $('[name=download-filename]').val() + ".txt";
-		var text = EXPORT_DATA.map(file => formatText(file)).join("\n" + separator + "\n");
+		var text = EXPORT_DATA.map(file => formatText(file)).join("\n\n" + separator + "\n\n");
 
 		$("#download-transcript").attr('download', filename);
 		$("#download-transcript").attr('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text))
