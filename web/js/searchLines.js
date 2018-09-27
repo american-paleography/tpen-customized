@@ -13,7 +13,7 @@ function searchLines(lines) {
 			lineIndices.push(parseInt(val));
 		}
 	});
-	var searchTextList = Array.from($('.search-text').map(function() { return $(this).val(); })).filter(x => x);
+	var searchTextList = Array.from($('.search-text').map(function() { return $(this).val().toLowerCase(); })).filter(x => x);
 	
 	var overall_container = $('#search-output');
 
@@ -23,8 +23,9 @@ function searchLines(lines) {
 		}
 
 		// cannot use a forEach() callback, since to return
+		var text = line.line_text.toLowerCase();
 		for (var searchText of searchTextList) {
-			if (!line.line_text.includes(searchText)) {
+			if (!text.includes(searchText)) {
 				return false;
 			}
 		}
