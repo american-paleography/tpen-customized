@@ -2,7 +2,7 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-        <title>Newberry Transcription</title>
+        <title>Concordance Plus</title>
         <link type="text/css" href="css/custom-theme/jQuery.css" rel="Stylesheet" />
         <script type="text/javascript" src="js/newberry.js"></script>
         <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.js"></script>
@@ -55,9 +55,10 @@
         
     </style>
     <body>
+    	<h1>Concordance Plus</h1>
 	<p>
-		<a id="download-json" download="glossary.json">Download JSON file</a>
-		<a id="download-csv" download="glossary.csv">Download CSV file</a>
+		<label for="line-height">Line Height</label>
+		<input type="number" name="line-height" value="1" min="0.1" step="0.1"></input>
 	</p>
 
 	<p>
@@ -80,22 +81,22 @@
 	</p>
 
 	<p>
-		<input name="base_word" type="text" placeholder="base word" />
-		<input name="alt_word" type="text" placeholder="alternate form" />
-		<button id="add_variant">Add Variant Form</button>
-		<ul id="variants_listing"></ul>
-		<button id="clear_variants">Clear Variant Forms</button>
-	</p>
-	<p>
-		<label for="line-height">Line Height</label>
-		<input type="number" name="line-height" value="1" min="0.1" step="0.1"></input>
-	</p>
-	<p>
-		<h2>Abbreviations & Variants</h2>
+		<h3>Abbreviations & Variants</h2>
+		<p>
+			<input name="base_word" type="text" placeholder="base word" />
+			<input name="alt_word" type="text" placeholder="alternate form" />
+			<button id="add_variant">Add Variant Form</button>
+			<ul id="variants_listing"></ul>
+			<button id="clear_variants">Clear Variant Forms</button>
+		</p>
 		<ul id="glossaryVariantForms"></ul>
 	</p>
 	<p>
 		<h2>Raw List</h2>
+		<p>
+			<a id="download-csv" download="glossary.csv">Download CSV file</a>
+			<a id="download-json" download="glossary.json">Download JSON file</a>
+		</p>
 		<ul id="glossaryDiv"></ul>
 	</p>
     </body>
