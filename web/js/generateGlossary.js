@@ -88,6 +88,19 @@ function reloadGlossaryData(manifest, other_data) {
 
 		var item = $('<li>');
 		item.text(alt);
+		var clearButton = $('<button>');
+		clearButton.text('remove');
+		clearButton.on('click', function() {
+			settings.variants[base] = settings.variants[base].filter(x => x != alt);
+			item.remove();
+			if (settings.variants[base].length == 0) {
+				scratch.varLists[base].parent().remove();
+				delete scratch.varLists[base];
+				delete settings.variants[base];
+			}
+			saveSettings();
+		});
+		item.append(clearButton);
 		scratch.varLists[base].append(item);
 	}
 
