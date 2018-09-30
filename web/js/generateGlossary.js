@@ -198,24 +198,31 @@ function reloadGlossaryData(manifest, other_data) {
 		$('a#download-csv').attr('href', 'data:text/csv;charset=utf-8,' + encodeURIComponent(csvVersion))
 
 		$('.source-line-indicator').on('click', function() {
-			var path = "/imageResize?folioNum=" + $(this).data('folio_index') + "&height=2000";
-			var holder = $(this);
-			var aabb = holder.data('aabb');
-			var [x, y, w, h] = aabb.split(',').map(x => parseInt(x));
-			var vert_scale = parseFloat($('[name=line-height]').val() || 1)
-			y -= (vert_scale - 1)/2 * h;
-			h *= vert_scale
-			var scale = 2; // is this correct for all images...?
-			var img = new Image();
-			img.onload = function() {
+			if (this.imageEl) {
+				this.imageEl.remove();
+				this.imageEl = null;
+			} else {
+				var path = "/imageResize?folioNum=" + $(this).data('folio_index') + "&height=2000";
+				var holder = $(this);
+				var aabb = holder.data('aabb');
+				var [x, y, w, h] = aabb.split(',').map(x => parseInt(x));
+				var vert_scale = parseFloat($('[name=line-height]').val() || 1)
+				y -= (vert_scale - 1)/2 * h;
+				h *= vert_scale
+				var scale = 2; // is this correct for all images...?
 				var canvas = $('<canvas>');
-				canvas.attr('width', w);
-				canvas.attr('height', h);
-				var ctx = canvas[0].getContext('2d');
-				ctx.drawImage(img, x * scale, y * scale, w * scale, h * scale, 0, 0, w, h);
-				holder.append(canvas);
-			};
-			img.src = path;
+				var img = new Image();
+				img.onload = function() {
+					canvas.attr('width', w);
+					canvas.attr('height', h);
+					var ctx = canvas[0].getContext('2d');
+					ctx.drawImage(img, x * scale, y * scale, w * scale, h * scale, 0, 0, w, h);
+					holder.append(canvas);
+				};
+				img.src = path;
+
+				this.imageEl = canvas;
+			}
 		});
 		$('#debug').text(csvVersion);
 
